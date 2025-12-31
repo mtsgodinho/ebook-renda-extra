@@ -2,24 +2,18 @@
 import React, { useState, useEffect } from 'react';
 
 // --- CONFIGURAÇÃO ---
-// Link de checkout real da Kiwify fornecido pelo usuário
 const KIWIFY_LINK = "https://pay.kiwify.com.br/raCQcNq";
 
 // --- Sub-components ---
 
 const CountdownTimer: React.FC<{ className?: string }> = ({ className }) => {
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 42,
-    seconds: 15,
-  });
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 27, seconds: 44 });
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
         if (prev.minutes > 0) return { ...prev, minutes: prev.minutes - 1, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
         return prev;
       });
     }, 1000);
@@ -29,252 +23,282 @@ const CountdownTimer: React.FC<{ className?: string }> = ({ className }) => {
   const format = (n: number) => n.toString().padStart(2, '0');
 
   return (
-    <div className={`flex items-center justify-center space-x-2 font-mono ${className}`}>
-      <div className="flex flex-col items-center">
-        <div className="bg-slate-800 border border-amber-500/30 text-amber-500 px-2 py-1 rounded text-lg font-bold">
-          {format(timeLeft.hours)}
-        </div>
-        <span className="text-[10px] uppercase text-slate-500 mt-1">Hrs</span>
-      </div>
-      <div className="text-amber-500 font-bold mb-4 text-xl">:</div>
-      <div className="flex flex-col items-center">
-        <div className="bg-slate-800 border border-amber-500/30 text-amber-500 px-2 py-1 rounded text-lg font-bold">
-          {format(timeLeft.minutes)}
-        </div>
-        <span className="text-[10px] uppercase text-slate-500 mt-1">Min</span>
-      </div>
-      <div className="text-amber-500 font-bold mb-4 text-xl">:</div>
-      <div className="flex flex-col items-center">
-        <div className="bg-slate-800 border border-amber-500/30 text-amber-500 px-2 py-1 rounded text-lg font-bold">
-          {format(timeLeft.seconds)}
-        </div>
-        <span className="text-[10px] uppercase text-slate-500 mt-1">Seg</span>
+    <div className={`flex items-center space-x-2 font-mono ${className}`}>
+      <div className="bg-amber-500 text-slate-950 px-2 py-1 rounded text-sm font-bold">
+        {format(timeLeft.hours)}h {format(timeLeft.minutes)}m {format(timeLeft.seconds)}s
       </div>
     </div>
   );
 };
 
 const Header: React.FC = () => (
-  <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-900">
-    <div className="container mx-auto px-4 h-20 flex items-center justify-between">
-      <div className="font-bold text-2xl tracking-tighter">MASTER<span className="text-amber-500">CLT</span></div>
-      <a href={KIWIFY_LINK} className="hidden sm:block bg-amber-500/10 border border-amber-500/30 text-amber-500 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-amber-500 hover:text-slate-950 transition-all">
-        Garantir Acesso
-      </a>
+  <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-xl border-b border-slate-900">
+    <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <div className="font-black text-xl tracking-tighter uppercase">Master<span className="text-amber-500">CLT</span></div>
+      <div className="flex items-center space-x-4">
+        <CountdownTimer className="hidden sm:flex" />
+        <a href="#checkout" className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-5 py-2 rounded-full text-xs font-black transition-all transform active:scale-95">
+          OBTER AGORA
+        </a>
+      </div>
     </div>
   </header>
 );
 
-const FeatureCard: React.FC<{ icon: string; title: string; description: string }> = ({ icon, title, description }) => (
-  <div className="bg-slate-900/50 border border-slate-800 p-8 rounded-3xl hover:border-amber-500/30 transition-all duration-300 text-left group">
-    <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300 inline-block">{icon}</div>
-    <h3 className="text-xl font-bold mb-4 text-white">{title}</h3>
-    <p className="text-slate-400 leading-relaxed text-sm">{description}</p>
+const ModuleItem: React.FC<{ number: string; title: string; desc: string }> = ({ number, title, desc }) => (
+  <div className="flex gap-6 p-6 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-amber-500/30 transition-all group">
+    <div className="text-3xl font-black text-amber-500/20 group-hover:text-amber-500 transition-colors">{number}</div>
+    <div>
+      <h4 className="text-lg font-bold text-white mb-2">{title}</h4>
+      <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
+    </div>
   </div>
 );
 
-const FAQItem: React.FC<{ question: string; answer: string }> = ({ question, answer }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <div className="border-b border-slate-800">
-      <button 
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
-      >
-        <span className="text-lg font-semibold group-hover:text-amber-500 transition-colors">{question}</span>
-        <span className={`transform transition-transform duration-300 text-amber-500 ${isOpen ? 'rotate-180' : ''}`}>
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-        </span>
-      </button>
-      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-96 pb-6' : 'max-h-0'}`}>
-        <p className="text-slate-400 leading-relaxed">{answer}</p>
-      </div>
-    </div>
-  );
-};
+const BonusCard: React.FC<{ title: string; value: string; icon: string }> = ({ title, value, icon }) => (
+  <div className="relative p-6 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-950 border border-amber-500/20 overflow-hidden group">
+    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-5xl">{icon}</div>
+    <span className="inline-block bg-amber-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded mb-4">BÔNUS EXCLUSIVO</span>
+    <h4 className="text-lg font-bold text-white mb-1">{title}</h4>
+    <p className="text-amber-500 text-sm font-bold italic">Valor Individual: {value}</p>
+    <p className="text-slate-400 text-xs mt-2 uppercase tracking-widest font-bold text-green-500">Grátis para você hoje</p>
+  </div>
+);
 
-const SocialProofNotification: React.FC = () => {
-  const [show, setShow] = useState(false);
-  const [notif, setNotif] = useState({ name: 'Marcelo', city: 'São Paulo' });
-
-  useEffect(() => {
-    const names = ['Fernanda', 'Carlos', 'Beatriz', 'João', 'Mariana', 'Ricardo'];
-    const cities = ['Rio de Janeiro', 'Curitiba', 'Belo Horizonte', 'Porto Alegre', 'Salvador'];
-    
-    const interval = setInterval(() => {
-      setShow(false);
-      setTimeout(() => {
-        setNotif({
-          name: names[Math.floor(Math.random() * names.length)],
-          city: cities[Math.floor(Math.random() * cities.length)]
-        });
-        setShow(true);
-      }, 500);
-    }, 8000);
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className={`fixed bottom-24 left-4 z-50 transition-all duration-500 transform ${show ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0 pointer-events-none'}`}>
-      <div className="bg-slate-900 border border-slate-800 p-4 rounded-xl shadow-2xl flex items-center space-x-3 max-w-xs">
-        <div className="w-10 h-10 bg-amber-500/20 rounded-full flex items-center justify-center text-amber-500">
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+const VslSection: React.FC = () => (
+  <section className="py-12 md:py-20 bg-slate-950">
+    <div className="container mx-auto px-4 text-center">
+      <h2 className="text-amber-500 font-bold text-sm tracking-[0.3em] uppercase mb-4">Apresentação Exclusiva</h2>
+      <h3 className="text-3xl md:text-5xl font-black mb-8 max-w-4xl mx-auto leading-tight">
+        Assista ao vídeo abaixo e descubra como <span className="text-amber-500 italic">hackear</span> o sistema.
+      </h3>
+      <div className="max-w-4xl mx-auto aspect-video bg-slate-900 rounded-[2rem] border-4 border-slate-800 shadow-[0_0_50px_rgba(245,158,11,0.1)] overflow-hidden relative group cursor-pointer">
+        {/* Placeholder para VSL - O usuário pode colocar o iframe aqui */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/60 group-hover:bg-black/40 transition-all">
+          <div className="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform">
+            <svg className="w-10 h-10 text-slate-950 ml-1" fill="currentColor" viewBox="0 0 20 20"><path d="M4.5 3.5v13l11-6.5-11-6.5z"/></svg>
+          </div>
         </div>
-        <div>
-          <p className="text-xs font-bold text-white">{notif.name} de {notif.city}</p>
-          <p className="text-[10px] text-slate-400">Acabou de adquirir o guia 🚀</p>
-        </div>
+        <img src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover opacity-40" alt="Video Background" />
       </div>
+      <p className="mt-8 text-slate-500 text-sm animate-pulse flex items-center justify-center gap-2">
+        <span className="w-2 h-2 bg-red-500 rounded-full"></span> 
+        Verifique se o seu áudio está ligado
+      </p>
     </div>
-  );
-};
+  </section>
+);
 
 const PurchaseBox: React.FC = () => (
-  <div id="comprar" className="bg-slate-900 border-2 border-amber-500/30 p-8 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
-    <div className="flex flex-col items-center text-center mb-8">
-      <div className="w-28 mb-6 shadow-2xl transform hover:scale-110 transition-transform duration-300">
-        <img src="https://i.imgur.com/wMi53pM.png" alt="Capa Ebook" className="w-full rounded shadow-2xl border border-slate-700" />
-      </div>
-      <div className="mb-4">
-        <p className="text-amber-500 text-[10px] font-bold uppercase tracking-widest mb-2 animate-pulse">A oferta expira em:</p>
-        <CountdownTimer className="scale-90" />
-      </div>
-      <h3 className="text-2xl md:text-3xl font-black mt-2 mb-4 tracking-tight">Comece sua virada hoje</h3>
-      <div className="flex items-center justify-center space-x-2 mb-4">
-        <span className="text-slate-500 line-through text-lg">R$ 47,00</span>
-        <span className="text-amber-500 text-4xl font-black tracking-tighter">R$ 9,90</span>
-      </div>
+  <div id="checkout" className="max-w-xl mx-auto bg-slate-900 rounded-3xl border-2 border-amber-500 overflow-hidden shadow-[0_0_80px_rgba(245,158,11,0.15)] transform hover:scale-[1.01] transition-all">
+    <div className="bg-amber-500 p-4 text-slate-950 text-center font-black uppercase tracking-tighter text-lg">
+      Oferta Especial de Lançamento
     </div>
-    <div className="space-y-6">
-      <a 
-        href={KIWIFY_LINK} 
-        className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-lg py-5 rounded-xl shadow-lg transition-all flex flex-col items-center justify-center group transform hover:scale-[1.02] animate-pulse-gold"
-      >
-        QUERO MEU ACESSO AGORA
-        <span className="text-[10px] opacity-80 uppercase tracking-tighter">Acesso imediato via e-mail</span>
+    <div className="p-8 md:p-12">
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h4 className="text-2xl font-black text-white">Guia MasterCLT</h4>
+          <p className="text-slate-400 text-sm">Acesso vitalício + Atualizações</p>
+        </div>
+        <div className="text-right">
+          <p className="text-slate-500 line-through text-sm">De R$ 97,00</p>
+          <p className="text-amber-500 text-4xl font-black">R$ 9,90</p>
+        </div>
+      </div>
+      
+      <div className="space-y-4 mb-8">
+        {[
+          "Checklist de Transição Segura",
+          "Planilha de Blindagem Financeira",
+          "Modelos de Demissão Amigável",
+          "Bônus: Guia de Networking 2.0"
+        ].map((item, idx) => (
+          <div key={idx} className="flex items-center gap-3 text-slate-200 text-sm font-medium">
+            <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>
+            {item}
+          </div>
+        ))}
+      </div>
+
+      <a href={KIWIFY_LINK} className="block w-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-center py-5 rounded-2xl font-black text-xl shadow-xl transition-all hover:shadow-amber-500/20 active:scale-95 animate-pulse-gold">
+        QUERO MINHA LIBERDADE AGORA
       </a>
       
-      <div className="space-y-4">
-        <div className="flex items-center justify-center space-x-4 opacity-50">
+      <div className="mt-6 text-center space-y-4">
+        <div className="flex items-center justify-center gap-4 opacity-40 grayscale">
           <img src="https://logodownload.org/wp-content/uploads/2014/07/visa-logo-1.png" className="h-4" alt="Visa" />
           <img src="https://logodownload.org/wp-content/uploads/2020/02/pix-logo-1.png" className="h-4" alt="Pix" />
+          <img src="https://logodownload.org/wp-content/uploads/2014/07/mastercard-logo.png" className="h-4" alt="Master" />
         </div>
-        
-        <div className="flex flex-col items-center justify-center space-y-2 pt-2 border-t border-slate-800">
-           <div className="flex items-center space-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-             <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-             <span>Pagamento 100% Seguro</span>
-           </div>
-           <div className="flex items-center space-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
-             <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>
-             <span>Garantia de 7 Dias</span>
-           </div>
-        </div>
+        <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">
+          🔒 Pagamento processado pela Kiwify • Ambiente 100% Seguro
+        </p>
       </div>
     </div>
   </div>
 );
-
-// --- Main App Component ---
 
 export default function App() {
   const [isVisible, setIsVisible] = useState(false);
-  const [showSticky, setShowSticky] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
-    const handleScroll = () => setShowSticky(window.scrollY > 800);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-amber-500/30">
       <Header />
-      <SocialProofNotification />
       
-      {/* Mobile Sticky Bar */}
-      <div className={`fixed bottom-0 left-0 right-0 z-[60] p-4 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 md:hidden transition-all duration-500 transform ${showSticky ? 'translate-y-0' : 'translate-y-full'}`}>
-        <div className="flex items-center justify-between gap-4">
-          <p className="text-amber-500 font-black text-xl leading-none">R$ 9,90</p>
-          <a href={KIWIFY_LINK} className="flex-1 bg-amber-500 text-slate-950 font-black py-3 rounded-xl text-center text-sm active:scale-95 transition-all animate-pulse">
-            GARANTIR MINHA VAGA
-          </a>
-        </div>
-      </div>
-      
-      <section className="pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden relative">
-        <div className="container mx-auto px-4 relative text-center lg:text-left">
-          <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-            <div className={`lg:w-7/12 transition-all duration-1000 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-              <div className="inline-flex flex-col items-center lg:items-start mb-6">
-                <div className="bg-amber-500/10 border border-amber-500/20 text-amber-500 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-4">OFERTA POR TEMPO LIMITADO</div>
-                <div className="flex items-center space-x-3 mb-2">
-                  <span className="text-slate-400 text-[10px] uppercase font-bold tracking-widest">O preço sobe em:</span>
-                  <CountdownTimer className="scale-75 origin-left" />
-                </div>
-              </div>
-              <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tighter">
-                O guia prático para <span className="gradient-text">dar adeus ao CLT</span> e retomar sua liberdade.
-              </h1>
-              <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0">
-                O passo a passo seguro para fazer sua transição de carreira e conquistar sua liberdade financeira.
-              </p>
-              <a href={KIWIFY_LINK} className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-10 py-5 rounded-2xl inline-block transition-all shadow-xl text-lg uppercase transform hover:scale-105 animate-pulse-gold">
-                Quero sair da corrida dos ratos
-              </a>
-            </div>
-            <div className={`lg:w-5/12 transition-all duration-1000 delay-300 transform ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
-              <div className="relative group">
-                <div className="absolute inset-0 bg-amber-500/30 blur-[80px] rounded-full group-hover:bg-amber-500/40 transition-all"></div>
-                <div className="relative transform rotate-3 hover:rotate-0 transition-all duration-700">
-                  <img src="https://i.imgur.com/wMi53pM.png" alt="Capa Ebook" className="w-full max-w-[420px] mx-auto rounded-lg shadow-2xl border border-slate-700/50" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-slate-950">
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/10 via-transparent to-transparent -z-10 opacity-50"></div>
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-5xl font-extrabold mb-16 tracking-tight">O que você vai descobrir:</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <FeatureCard icon="⚖️" title="Armadilha da Estabilidade" description="A verdade sobre o risco real do CLT nos dias de hoje." />
-            <FeatureCard icon="🛡️" title="Reserva de Blindagem" description="Quanto você precisa exatamente para sair com segurança." />
-            <FeatureCard icon="🚀" title="Escala Pós-CLT" description="Como faturar nos primeiros 90 dias de jornada solo." />
+          <div className="inline-block px-4 py-1 rounded-full bg-slate-900 border border-slate-800 text-amber-500 text-xs font-bold mb-8 uppercase tracking-[0.2em]">
+            O Segredo que seu chefe não quer que você saiba
+          </div>
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.95] mb-8 max-w-5xl mx-auto">
+            A ESTABILIDADE É UMA <span className="gradient-text italic">ILUSÃO</span> QUE TE MANTÉM PRESO.
+          </h1>
+          <p className="text-lg md:text-2xl text-slate-400 max-w-2xl mx-auto mb-10 font-medium">
+            O mapa definitivo para sair do CLT com segurança, estratégia e um plano de fuga que realmente funciona.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <a href="#checkout" className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 px-10 py-5 rounded-2xl font-black text-lg transition-all shadow-2xl hover:scale-105 active:scale-95">
+              GARANTIR MEU ACESSO R$ 9,90
+            </a>
+            <div className="flex -space-x-3 overflow-hidden py-1">
+              {[1, 2, 3, 4].map(i => (
+                <img key={i} className="inline-block h-10 w-10 rounded-full ring-2 ring-slate-950" src={`https://i.pravatar.cc/150?u=${i}`} alt="user" />
+              ))}
+              <div className="flex items-center justify-center h-10 px-4 rounded-full bg-slate-900 ring-2 ring-slate-950 text-[10px] font-bold text-slate-400 uppercase">
+                +1,200 alunos
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
+      <VslSection />
+
+      {/* Pain Section */}
+      <section className="py-24 bg-slate-900/30">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">
+                Você está trocando sua <span className="text-red-500">vida</span> por um salário que mal paga suas contas?
+              </h2>
+              <div className="space-y-6">
+                <div className="p-6 rounded-2xl bg-slate-900 border-l-4 border-red-500">
+                  <h4 className="font-bold mb-2">A Crise do Estresse</h4>
+                  <p className="text-slate-400 text-sm italic">"Burnout não é falta de resiliência, é excesso de ambiente tóxico."</p>
+                </div>
+                <div className="p-6 rounded-2xl bg-slate-900 border-l-4 border-amber-500">
+                  <h4 className="font-bold mb-2">A Falsa Segurança</h4>
+                  <p className="text-slate-400 text-sm">O maior risco não é tentar algo novo, é ficar onde você está e ser descartado na próxima "reestruturação".</p>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-amber-500/20 blur-[100px] -z-10"></div>
+              <img src="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=800" className="rounded-[3rem] shadow-2xl border border-slate-800 transform rotate-2" alt="Realidade" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Content Section */}
       <section className="py-24 bg-slate-950">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">Dúvidas Frequentes</h2>
-            <FAQItem question="Como recebo o acesso?" answer="Imediatamente por e-mail após a confirmação do pagamento pela Kiwify." />
-            <FAQItem question="Tem garantia?" answer="Sim! 7 dias de garantia incondicional conforme o Código de Defesa do Consumidor." />
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black mb-4 tracking-tighter">O QUE VOCÊ VAI DOMINAR</h2>
+            <p className="text-slate-400 max-w-xl mx-auto">Tudo o que você precisa para arquitetar sua saída estratégica sem dar um passo no escuro.</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <ModuleItem number="01" title="Mindset de Transição" desc="Como reprogramar sua mente para parar de pensar como empregado e começar a ver oportunidades como dono do seu tempo." />
+            <ModuleItem number="02" title="Cálculo da Alforria" desc="Método exato para calcular sua reserva de emergência e quanto você realmente precisa para viver com dignidade." />
+            <ModuleItem number="03" title="A Saída Blindada" desc="A estratégia legal e ética para sair do emprego atual mantendo as portas abertas e garantindo seus direitos." />
+            <ModuleItem number="04" title="Monetização Imediata" desc="Técnicas para gerar seus primeiros R$ 2.000,00 extras enquanto ainda está no CLT para validar sua nova jornada." />
+            <ModuleItem number="05" title="Gestão de Rotina Solo" desc="Como não surtar com a liberdade: O guia de produtividade para quem agora é o próprio chefe." />
+            <ModuleItem number="06" title="Escalando o Futuro" desc="O roadmap dos próximos 12 meses após a demissão para nunca mais precisar atualizar um currículo na vida." />
           </div>
         </div>
       </section>
 
-      <section className="py-24 bg-slate-950 border-t border-slate-900">
+      {/* Bonus Section */}
+      <section className="py-24 bg-amber-500/5 border-y border-amber-500/10">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
-            <div className="lg:w-1/2 text-center lg:text-left">
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight tracking-tight">Sua liberdade custa menos que um café.</h2>
-              <p className="text-lg text-slate-400 mb-8">Pare de adiar o seu futuro. Tenha o plano mestre agora.</p>
-            </div>
-            <div className="lg:w-1/2 w-full">
-              <PurchaseBox />
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-black mb-4 tracking-tighter uppercase">Presentes Exclusivos</h2>
+            <p className="text-slate-400">Ao garantir o eBook hoje, você leva ferramentas que custariam R$ 197,00 separadamente.</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <BonusCard title="Planilha de Blindagem Financeira" value="R$ 47,00" icon="📊" />
+            <BonusCard title="Manual de Networking Estratégico" value="R$ 67,00" icon="🤝" />
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof */}
+      <section className="py-24 bg-slate-950">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto bg-slate-900 p-12 rounded-[3rem] border border-slate-800 relative">
+            <div className="absolute -top-6 -left-6 text-amber-500 text-8xl opacity-20">“</div>
+            <p className="text-xl md:text-3xl font-medium text-slate-200 mb-8 italic leading-relaxed">
+              "Eu achava que precisava de 50 mil reais guardados para sair. O MasterCLT me mostrou que com estratégia e 4 meses de reserva eu já poderia voar. Hoje sou consultor e trabalho metade do tempo faturando o dobro."
+            </p>
+            <div className="flex items-center gap-4">
+              <img src="https://i.pravatar.cc/100?u=lucas" className="w-16 h-16 rounded-full border-2 border-amber-500" alt="avatar" />
+              <div>
+                <p className="font-bold text-white text-lg">Lucas Menezes</p>
+                <p className="text-amber-500 text-xs font-bold uppercase">Ex-Gerente Comercial</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <footer className="py-16 border-t border-slate-900 bg-slate-950 text-center">
-        <div className="font-bold text-2xl tracking-tighter mb-4">MASTER<span className="text-amber-500">CLT</span></div>
-        <p className="text-slate-600 text-[9px] uppercase tracking-widest">© 2024 MasterCLT • Processado por Kiwify Tecnologia.</p>
+      {/* Final Offer */}
+      <section className="py-24 bg-slate-950 relative overflow-hidden">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase leading-none">
+              DECIDA PELO SEU <span className="text-amber-500">FUTURO</span> AGORA.
+            </h2>
+            <p className="text-slate-400 text-lg max-w-xl mx-auto">
+              Você pode ignorar esta página e continuar na mesma rotina, ou investir o preço de um café para mudar sua trajetória para sempre.
+            </p>
+          </div>
+          <PurchaseBox />
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 bg-slate-900/20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto">
+            <h2 className="text-3xl font-black mb-12 text-center tracking-tighter">PERGUNTAS FREQUENTES</h2>
+            <div className="space-y-4">
+              {[
+                {q: "O acesso é imediato?", a: "Sim! Assim que o pagamento for aprovado, você recebe o link de download no seu e-mail cadastrado."},
+                {q: "Mesmo se eu não tiver nada guardado serve?", a: "Principalmente para você. O guia ensina exatamente como começar a construir sua reserva do zero enquanto ainda trabalha."},
+                {q: "Tenho garantia?", a: "Sim, risco zero. Se em 7 dias você achar que o conteúdo não agregou valor, devolvemos 100% do seu dinheiro via Kiwify."}
+              ].map((faq, i) => (
+                <div key={i} className="p-6 bg-slate-900/50 rounded-2xl border border-slate-800">
+                  <h4 className="font-bold text-white mb-2">{faq.q}</h4>
+                  <p className="text-slate-400 text-sm">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className="py-12 border-t border-slate-900 text-center opacity-40">
+        <p className="text-[10px] uppercase font-bold tracking-[0.4em] mb-4">MasterCLT • 2024</p>
+        <p className="text-[8px] max-w-xs mx-auto text-slate-500">
+          Este site não faz parte do Google ou Facebook. Os resultados podem variar de pessoa para pessoa.
+        </p>
       </footer>
     </div>
   );
