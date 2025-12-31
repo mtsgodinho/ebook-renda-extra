@@ -259,20 +259,4 @@ export default function App() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-16 max-w-6xl mx-auto">
             <div className="lg:w-1/2 text-center lg:text-left">
-              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight tracking-tight">Sua liberdade custa menos que um café.</h2>
-              <p className="text-lg text-slate-400 mb-8">Pare de adiar o seu futuro. Tenha o plano mestre agora.</p>
-            </div>
-            <div className="lg:w-1/2 w-full">
-              <PurchaseBox />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="py-16 border-t border-slate-900 bg-slate-950 text-center">
-        <div className="font-bold text-2xl tracking-tighter mb-4">MASTER<span className="text-amber-500">CLT</span></div>
-        <p className="text-slate-600 text-[9px] uppercase tracking-widest">© 2024 MasterCLT • Todos os direitos reservados.</p>
-      </footer>
-    </div>
-  );
-}
+              <h2 className="text-4xl md:text-5xl font
