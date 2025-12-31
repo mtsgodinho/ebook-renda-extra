@@ -1,6 +1,10 @@
 
 import React, { useState, useEffect } from 'react';
 
+// --- CONFIGURAÇÃO ---
+// Link de checkout real da Kiwify fornecido pelo usuário
+const KIWIFY_LINK = "https://pay.kiwify.com.br/raCQcNq";
+
 // --- Sub-components ---
 
 const CountdownTimer: React.FC<{ className?: string }> = ({ className }) => {
@@ -54,7 +58,7 @@ const Header: React.FC = () => (
   <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-900">
     <div className="container mx-auto px-4 h-20 flex items-center justify-between">
       <div className="font-bold text-2xl tracking-tighter">MASTER<span className="text-amber-500">CLT</span></div>
-      <a href="#comprar" className="hidden sm:block bg-amber-500/10 border border-amber-500/30 text-amber-500 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-amber-500 hover:text-slate-950 transition-all">
+      <a href={KIWIFY_LINK} className="hidden sm:block bg-amber-500/10 border border-amber-500/30 text-amber-500 px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-amber-500 hover:text-slate-950 transition-all">
         Garantir Acesso
       </a>
     </div>
@@ -126,23 +130,6 @@ const SocialProofNotification: React.FC = () => {
   );
 };
 
-const Testimonial: React.FC = () => (
-  <section className="py-24 bg-slate-900/20">
-    <div className="container mx-auto px-4">
-      <div className="max-w-4xl mx-auto bg-slate-900 border border-slate-800 p-10 rounded-[40px] relative overflow-hidden text-center">
-        <div className="w-20 h-20 rounded-full border-2 border-amber-500 p-1 mb-6 mx-auto">
-          <img src="https://picsum.photos/seed/marcus/80/80" className="w-full h-full rounded-full object-cover" alt="Depoimento" />
-        </div>
-        <p className="text-xl md:text-2xl font-medium italic text-slate-200 mb-8 leading-relaxed">
-          "Eu estava preso em um cargo que sugava minha alma. O guia me deu não só a coragem, mas o plano prático. Hoje faturo 3x mais trabalhando de casa."
-        </p>
-        <p className="font-bold text-lg text-white">Marcus Vinícius</p>
-        <p className="text-amber-500 text-sm font-bold uppercase tracking-widest">Ex-Analista Financeiro</p>
-      </div>
-    </div>
-  </section>
-);
-
 const PurchaseBox: React.FC = () => (
   <div id="comprar" className="bg-slate-900 border-2 border-amber-500/30 p-8 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
     <div className="flex flex-col items-center text-center mb-8">
@@ -159,13 +146,31 @@ const PurchaseBox: React.FC = () => (
         <span className="text-amber-500 text-4xl font-black tracking-tighter">R$ 9,90</span>
       </div>
     </div>
-    <div className="space-y-4">
-      <a href="https://pay.kiwify.com.br/SEU_LINK_AQUI" className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-lg py-5 rounded-xl shadow-lg transition-all flex flex-col items-center justify-center group transform hover:scale-[1.02]">
-        QUERO MEU ACESSO
+    <div className="space-y-6">
+      <a 
+        href={KIWIFY_LINK} 
+        className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-lg py-5 rounded-xl shadow-lg transition-all flex flex-col items-center justify-center group transform hover:scale-[1.02] animate-pulse-gold"
+      >
+        QUERO MEU ACESSO AGORA
+        <span className="text-[10px] opacity-80 uppercase tracking-tighter">Acesso imediato via e-mail</span>
       </a>
-      <div className="flex items-center justify-center space-x-4 opacity-50">
-        <img src="https://logodownload.org/wp-content/uploads/2014/07/visa-logo-1.png" className="h-4" alt="Visa" />
-        <img src="https://logodownload.org/wp-content/uploads/2020/02/pix-logo-1.png" className="h-4" alt="Pix" />
+      
+      <div className="space-y-4">
+        <div className="flex items-center justify-center space-x-4 opacity-50">
+          <img src="https://logodownload.org/wp-content/uploads/2014/07/visa-logo-1.png" className="h-4" alt="Visa" />
+          <img src="https://logodownload.org/wp-content/uploads/2020/02/pix-logo-1.png" className="h-4" alt="Pix" />
+        </div>
+        
+        <div className="flex flex-col items-center justify-center space-y-2 pt-2 border-t border-slate-800">
+           <div className="flex items-center space-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+             <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+             <span>Pagamento 100% Seguro</span>
+           </div>
+           <div className="flex items-center space-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+             <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" /><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" /></svg>
+             <span>Garantia de 7 Dias</span>
+           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -193,7 +198,7 @@ export default function App() {
       <div className={`fixed bottom-0 left-0 right-0 z-[60] p-4 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 md:hidden transition-all duration-500 transform ${showSticky ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="flex items-center justify-between gap-4">
           <p className="text-amber-500 font-black text-xl leading-none">R$ 9,90</p>
-          <a href="#comprar" className="flex-1 bg-amber-500 text-slate-950 font-black py-3 rounded-xl text-center text-sm active:scale-95 transition-all">
+          <a href={KIWIFY_LINK} className="flex-1 bg-amber-500 text-slate-950 font-black py-3 rounded-xl text-center text-sm active:scale-95 transition-all animate-pulse">
             GARANTIR MINHA VAGA
           </a>
         </div>
@@ -216,7 +221,7 @@ export default function App() {
               <p className="text-lg md:text-xl text-slate-400 mb-8 max-w-2xl leading-relaxed mx-auto lg:mx-0">
                 O passo a passo seguro para fazer sua transição de carreira e conquistar sua liberdade financeira.
               </p>
-              <a href="#comprar" className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-10 py-5 rounded-2xl inline-block transition-all shadow-xl text-lg uppercase transform hover:scale-105">
+              <a href={KIWIFY_LINK} className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black px-10 py-5 rounded-2xl inline-block transition-all shadow-xl text-lg uppercase transform hover:scale-105 animate-pulse-gold">
                 Quero sair da corrida dos ratos
               </a>
             </div>
@@ -243,14 +248,12 @@ export default function App() {
         </div>
       </section>
 
-      <Testimonial />
-
       <section className="py-24 bg-slate-950">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-extrabold mb-12 text-center">Dúvidas Frequentes</h2>
-            <FAQItem question="Como recebo o acesso?" answer="Imediatamente por e-mail após a confirmação do pagamento." />
-            <FAQItem question="Tem garantia?" answer="Sim! 7 dias de garantia incondicional." />
+            <FAQItem question="Como recebo o acesso?" answer="Imediatamente por e-mail após a confirmação do pagamento pela Kiwify." />
+            <FAQItem question="Tem garantia?" answer="Sim! 7 dias de garantia incondicional conforme o Código de Defesa do Consumidor." />
           </div>
         </div>
       </section>
@@ -271,7 +274,7 @@ export default function App() {
 
       <footer className="py-16 border-t border-slate-900 bg-slate-950 text-center">
         <div className="font-bold text-2xl tracking-tighter mb-4">MASTER<span className="text-amber-500">CLT</span></div>
-        <p className="text-slate-600 text-[9px] uppercase tracking-widest">© 2024 MasterCLT • Todos os direitos reservados.</p>
+        <p className="text-slate-600 text-[9px] uppercase tracking-widest">© 2024 MasterCLT • Processado por Kiwify Tecnologia.</p>
       </footer>
     </div>
   );
