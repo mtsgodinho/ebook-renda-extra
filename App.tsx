@@ -7,8 +7,8 @@ const EBOOK_MOCKUP = "https://i.imgur.com/wMi53pM.png";
 
 // --- Sub-components ---
 
-const CountdownTimer: React.FC<{ className?: string; compact?: boolean }> = ({ className, compact }) => {
-  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 19, seconds: 54 });
+const CountdownTimer: React.FC<{ compact?: boolean }> = ({ compact }) => {
+  const [timeLeft, setTimeLeft] = useState({ minutes: 14, seconds: 32 });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -25,70 +25,52 @@ const CountdownTimer: React.FC<{ className?: string; compact?: boolean }> = ({ c
 
   if (compact) {
     return (
-      <div className={`flex items-center gap-1 font-mono font-black ${className}`}>
-        <span className="bg-red-600 text-white px-1.5 py-0.5 rounded text-xs">{format(timeLeft.minutes)}</span>
-        <span className="text-red-600 animate-pulse">:</span>
-        <span className="bg-red-600 text-white px-1.5 py-0.5 rounded text-xs">{format(timeLeft.seconds)}</span>
+      <div className="flex items-center gap-1 font-mono font-black text-red-500">
+        <span>{format(timeLeft.minutes)}</span>
+        <span className="animate-pulse text-red-600">:</span>
+        <span>{format(timeLeft.seconds)}</span>
       </div>
     );
   }
 
   return (
-    <div className={`flex items-center justify-center gap-2 font-mono ${className}`}>
+    <div className="flex items-center gap-3">
       <div className="flex flex-col items-center">
-        <div className="bg-red-600 text-white px-3 py-2 rounded-lg text-xl md:text-2xl font-black shadow-lg shadow-red-900/20">
-          {format(timeLeft.hours)}
-        </div>
-        <span className="text-[8px] font-bold text-slate-500 mt-1 uppercase">Horas</span>
-      </div>
-      <span className="text-red-600 font-black text-2xl animate-pulse mb-4">:</span>
-      <div className="flex flex-col items-center">
-        <div className="bg-red-600 text-white px-3 py-2 rounded-lg text-xl md:text-2xl font-black shadow-lg shadow-red-900/20">
+        <div className="bg-red-600 text-white px-3 py-1.5 rounded-md text-xl font-black tabular-nums shadow-lg shadow-red-900/20">
           {format(timeLeft.minutes)}
         </div>
-        <span className="text-[8px] font-bold text-slate-500 mt-1 uppercase">Minutos</span>
+        <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase tracking-tighter">Minutos</span>
       </div>
-      <span className="text-red-600 font-black text-2xl animate-pulse mb-4">:</span>
+      <span className="text-red-600 font-black text-xl animate-pulse">:</span>
       <div className="flex flex-col items-center">
-        <div className="bg-red-600 text-white px-3 py-2 rounded-lg text-xl md:text-2xl font-black shadow-lg shadow-red-900/20">
+        <div className="bg-red-600 text-white px-3 py-1.5 rounded-md text-xl font-black tabular-nums shadow-lg shadow-red-900/20">
           {format(timeLeft.seconds)}
         </div>
-        <span className="text-[8px] font-bold text-slate-500 mt-1 uppercase">Segundos</span>
+        <span className="text-[9px] font-bold text-slate-500 mt-1 uppercase tracking-tighter">Segundos</span>
       </div>
     </div>
   );
 };
 
 const StickyCTA: React.FC = () => {
-  const [show, setShow] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 400) setShow(true);
-      else setShow(false);
-    };
+    const handleScroll = () => setIsVisible(window.scrollY > 600);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-[100] p-4 transition-all duration-500 transform ${show ? 'translate-y-0' : 'translate-y-full opacity-0'}`}>
-      <div className="container mx-auto max-w-4xl">
-        <div className="bg-slate-900/90 backdrop-blur-xl border border-slate-700/50 rounded-2xl md:rounded-full p-3 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4 shadow-[0_0_40px_rgba(0,0,0,0.6)] border-b-4 border-b-amber-500/30">
-          <div className="flex items-center gap-6">
-            <div className="hidden sm:block">
-              <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Oferta expira em:</p>
-              <CountdownTimer compact />
-            </div>
-            <div className="flex items-baseline gap-2">
-              <span className="text-slate-500 line-through text-xs font-bold">R$ 97</span>
-              <span className="text-amber-500 text-2xl font-black">R$ 9,90</span>
-            </div>
+    <div className={`fixed bottom-0 left-0 right-0 z-[100] p-4 transition-all duration-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
+      <div className="container mx-auto max-w-2xl">
+        <div className="bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex items-center justify-between shadow-2xl">
+          <div className="hidden sm:block">
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Acesso Vitalício</p>
+            <p className="text-amber-500 font-black text-xl">R$ 9,90</p>
           </div>
-          
-          <a href={KIWIFY_LINK} className="w-full md:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 px-8 py-3 rounded-xl md:rounded-full font-black text-sm transition-all shadow-xl hover:scale-105 active:scale-95 animate-pulse-gold uppercase flex items-center justify-center gap-2">
-            Quero Minha Liberdade
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+          <a href={KIWIFY_LINK} className="flex-1 sm:flex-none bg-amber-500 hover:bg-amber-600 text-slate-950 px-8 py-3 rounded-xl font-black text-sm uppercase transition-all animate-pulse-gold text-center">
+            Garantir Meu Acesso
           </a>
         </div>
       </div>
@@ -96,178 +78,213 @@ const StickyCTA: React.FC = () => {
   );
 };
 
-const Header: React.FC = () => (
-  <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-900">
-    <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-      <div className="font-black text-xl tracking-tighter italic">MASTER<span className="text-amber-500">CLT</span></div>
-      <div className="flex items-center gap-4">
-        <div className="hidden md:flex items-center gap-2">
-          <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Últimas Vagas:</span>
-          <CountdownTimer compact />
-        </div>
-        <a href="#checkout" className="bg-amber-500 hover:bg-amber-600 text-slate-950 px-6 py-2 rounded-lg text-xs font-black transition-all uppercase">
-          Garantir Vaga
-        </a>
-      </div>
-    </div>
-  </header>
-);
-
-const BenefitCard: React.FC<{ icon: string; title: string; desc: string }> = ({ icon, title, desc }) => (
-  <div className="p-8 rounded-3xl bg-slate-900 border border-slate-800 hover:border-amber-500/50 transition-all duration-300 group">
-    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform">{icon}</div>
-    <h4 className="text-xl font-bold text-white mb-2">{title}</h4>
+const ModuleItem: React.FC<{ cap: string; title: string; desc: string }> = ({ cap, title, desc }) => (
+  <div className="p-8 bg-slate-900/40 border border-white/5 rounded-[2rem] hover:border-amber-500/30 transition-all group">
+    <span className="text-amber-500/50 font-black text-xs uppercase tracking-[0.3em] mb-4 block group-hover:text-amber-500 transition-colors">{cap}</span>
+    <h4 className="text-white font-black mb-3 text-xl tracking-tight leading-tight uppercase">{title}</h4>
     <p className="text-slate-400 text-sm leading-relaxed">{desc}</p>
   </div>
 );
 
-const ModuleRow: React.FC<{ number: string; title: string; tags: string[] }> = ({ number, title, tags }) => (
-  <div className="py-6 border-b border-slate-900 flex flex-col md:flex-row md:items-center gap-4 group">
-    <span className="text-amber-500 font-black text-2xl opacity-50 group-hover:opacity-100 transition-opacity">{number}</span>
-    <h4 className="text-lg font-bold text-slate-200 flex-1">{title}</h4>
-    <div className="flex flex-wrap gap-2">
-      {tags.map(tag => (
-        <span key={tag} className="text-[10px] bg-slate-800 text-slate-400 px-2 py-1 rounded font-bold uppercase tracking-widest">{tag}</span>
-      ))}
-    </div>
-  </div>
-);
-
-const PurchaseBox: React.FC = () => (
-  <div id="checkout" className="max-w-2xl mx-auto bg-slate-900 rounded-[2.5rem] border border-slate-800 overflow-hidden shadow-2xl relative">
-    <div className="absolute top-0 right-0 p-6">
-      <div className="bg-green-500/10 text-green-500 text-[10px] font-black px-3 py-1 rounded-full border border-green-500/20 animate-pulse">DISPONÍVEL AGORA</div>
-    </div>
-    <div className="p-8 md:p-12">
-      <div className="flex flex-col md:flex-row gap-10 items-center">
-        <div className="w-32 md:w-44 flex-shrink-0">
-          <img src={EBOOK_MOCKUP} alt="Ebook" className="w-full drop-shadow-[0_20px_30px_rgba(0,0,0,0.5)] transform -rotate-3" />
-        </div>
-        <div className="flex-1 text-center md:text-left">
-          <h3 className="text-2xl font-black text-white mb-2 tracking-tight uppercase">O Mapa da sua Alforria</h3>
-          <p className="text-slate-400 text-sm mb-6 leading-relaxed">Você receberá o Guia Completo + Planilha de Reserva + Checklist de Demissão imediatamente.</p>
-          
-          <div className="flex items-baseline justify-center md:justify-start gap-3 mb-8">
-            <span className="text-slate-500 line-through text-lg">R$ 97,00</span>
-            <span className="text-amber-500 text-5xl font-black tracking-tighter">R$ 9,90</span>
-          </div>
-
-          <a href={KIWIFY_LINK} className="block w-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-center py-5 rounded-2xl font-black text-xl shadow-xl transition-all active:scale-95 animate-pulse-gold">
-            SIM! QUERO MEU ACESSO AGORA
-          </a>
-          
-          <p className="mt-4 text-[10px] text-slate-500 uppercase font-bold tracking-[0.2em] text-center">
-            🔒 Pagamento 100% Seguro via Kiwify
-          </p>
-        </div>
-      </div>
-    </div>
+const StatCard: React.FC<{ value: string; label: string; desc: string }> = ({ value, label, desc }) => (
+  <div className="text-center p-6 border-r border-white/5 last:border-0">
+    <div className="text-4xl font-black text-amber-500 mb-2">{value}</div>
+    <div className="text-xs font-black uppercase tracking-widest text-white mb-2">{label}</div>
+    <p className="text-[10px] text-slate-500 leading-tight">{desc}</p>
   </div>
 );
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500/30 pb-20 md:pb-0">
-      <Header />
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-amber-500/30">
       <StickyCTA />
+      
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-50">
+        <div className="container mx-auto px-4 h-24 flex items-center justify-between">
+          <div className="text-2xl font-black italic tracking-tighter">MASTER<span className="text-amber-500">CLT</span></div>
+          <div className="flex items-center gap-6">
+            <div className="hidden md:block">
+              <CountdownTimer compact />
+            </div>
+            <a href="#checkout" className="bg-amber-500 text-slate-950 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-amber-600 transition-all">Comprar Agora</a>
+          </div>
+        </div>
+      </header>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 md:pt-48 md:pb-32 overflow-hidden relative">
+      <section className="relative pt-40 pb-20 md:pt-56 md:pb-40 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent -z-10"></div>
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-7/12 text-center lg:text-left">
-              <div className="inline-flex flex-col md:flex-row items-center gap-6 mb-10 bg-slate-900/50 p-6 md:p-4 rounded-3xl border border-slate-800">
-                <div className="text-center md:text-left">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-500 block mb-2">Atenção: Oferta Especial</span>
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+            <div className="lg:w-1/2 text-center lg:text-left">
+              <div className="inline-block px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-8">
+                O Manual que eu gostaria de ter lido
+              </div>
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.85] mb-8">
+                TUDO QUE VOCÊ <br />
+                PRECISA <span className="text-amber-500 italic">SABER.</span>
+              </h1>
+              <p className="text-lg md:text-xl text-slate-400 max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed font-medium">
+                Sair do CLT não é uma fuga, é uma direção. Este é o guia definitivo para quem busca liberdade real, baseada em planejamento técnico e não em sorte.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start">
+                <a href="#checkout" className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 px-12 py-5 rounded-2xl font-black text-xl transition-all shadow-2xl shadow-amber-500/20 hover:scale-105 active:scale-95">
+                  PEGAR MEU GUIA • R$ 9,90
+                </a>
+                <div className="flex flex-col items-center sm:items-start">
+                  <span className="text-[10px] font-black uppercase text-slate-500 mb-2">Preço sobe em:</span>
                   <CountdownTimer />
                 </div>
-                <div className="hidden md:block w-px h-12 bg-slate-800"></div>
-                <div className="text-center md:text-left">
-                   <p className="text-xs font-bold text-slate-400">Restam apenas <span className="text-white">14 licenças</span> com o valor promocional de R$ 9,90</p>
-                </div>
-              </div>
-              
-              <h1 className="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter leading-[0.9] mb-8">
-                PEÇA AS CONTAS COM <span className="text-amber-500 italic">MÉTODO.</span>
-              </h1>
-              <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl leading-relaxed">
-                Pare de ser refém da falsa segurança corporativa. O MasterCLT é o plano de fuga definitivo para quem busca liberdade sem arriscar a estabilidade financeira.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <a href="#checkout" className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-slate-950 px-10 py-5 rounded-2xl font-black text-lg transition-all shadow-2xl active:scale-95">
-                  PEGAR O MAPA AGORA
-                </a>
-                <div className="flex items-center gap-2">
-                   <div className="flex -space-x-2">
-                     {[1,2,3].map(i => <img key={i} src={`https://i.pravatar.cc/100?u=${i}`} className="w-8 h-8 rounded-full border-2 border-slate-950" alt="aluno" />)}
-                   </div>
-                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">+1.2k alunos livres</p>
-                </div>
               </div>
             </div>
-            <div className="lg:w-5/12 relative">
-              <div className="absolute inset-0 bg-amber-500/20 blur-[120px] rounded-full -z-10 animate-pulse"></div>
-              <img src={EBOOK_MOCKUP} alt="MasterCLT Ebook" className="w-full max-w-[450px] mx-auto drop-shadow-[0_35px_60px_rgba(0,0,0,0.6)] transform rotate-2 hover:rotate-0 transition-transform duration-700" />
+            
+            <div className="lg:w-1/2 relative">
+              <div className="absolute inset-0 bg-amber-500/20 blur-[150px] rounded-full -z-10 animate-pulse"></div>
+              <img src={EBOOK_MOCKUP} alt="Ebook MasterCLT" className="w-full max-w-[500px] mx-auto drop-shadow-[0_50px_100px_rgba(0,0,0,0.7)] transform lg:rotate-6 hover:rotate-0 transition-transform duration-1000" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Content Sections (Simplified for conversion focus) */}
-      <section className="py-24 bg-slate-950 border-t border-slate-900">
+      {/* The Pain Story Section */}
+      <section className="py-24 bg-slate-900/20 border-y border-white/5">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <span className="text-amber-500 font-black text-[10px] uppercase tracking-[0.4em] mb-4 block">Baseado em fatos reais</span>
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-8 tracking-tighter">O DIA EM QUE O MUNDO <br />VIROU DE CABEÇA PRA BAIXO.</h2>
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6 text-slate-400 leading-relaxed">
+                <p>Eu era fiel. Batia metas, vestia a camisa e acreditava na cultura da empresa. Até que a pandemia veio.</p>
+                <div className="p-6 bg-red-600/10 border-l-4 border-red-600 rounded-r-xl">
+                  <p className="text-white font-black text-xl">"650 pessoas foram demitidas sem nada."</p>
+                  <p className="text-xs mt-2">Em um Zoom. Sem aviso prévio. Frio e corporativo.</p>
+                </div>
+                <p>Foi ali que eu decidi: <span className="text-white font-bold">nunca mais eu ia depender de ninguém para viver.</span> Construir o sonho de outra pessoa é uma ilusão que pode evaporar da noite pro dia.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <StatCard value="73%" label="Desistem no 1º Ano" desc="Por não aguentarem a pressão sem resultado." />
+                <StatCard value="85%" label="Sem Reserva" desc="Percentual que larga o emprego sem planejamento." />
+                <StatCard value="3x" label="Mais Trabalho" desc="Você trabalha mais, mas agora é para VOCÊ." />
+                <StatCard value="40%" label="Voltam pro CLT" desc="Muitos voltam por falta de direção técnica." />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Actual Contents - The Map */}
+      <section className="py-32 bg-slate-950">
         <div className="container mx-auto px-4">
           <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tighter uppercase">Por que este guia é Vital?</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">Não é sobre "pedir as contas", é sobre arquitetar o seu futuro enquanto você ainda tem o salário do mês garantido.</p>
+            <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase italic">O Mapa da sua Alforria</h2>
+            <p className="text-slate-500 max-w-xl mx-auto">Tudo o que você vai encontrar dentro das páginas do Guia Definitivo MasterCLT.</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <BenefitCard icon="📉" title="A Armadilha do CLT" desc="Entenda por que economizar dinheiro é a pior forma de tentar sair do emprego e o que você deve fazer no lugar." />
-            <BenefitCard icon="💰" title="Renda Extra Validada" desc="Aprenda 3 formas de gerar seus primeiros R$ 2.000,00 fora da empresa atual em menos de 45 dias." />
-            <BenefitCard icon="🛡️" title="Blindagem Jurídica" desc="Como negociar sua saída garantindo seu FGTS e seguro desemprego sem brigas ou processos." />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <ModuleItem 
+              cap="Capítulo 1" 
+              title="A Mentira da Liberdade" 
+              desc="A diferença entre a ilusão de trabalhar na praia e a verdade sobre a disciplina necessária para não ser escravo do caos." 
+            />
+            <ModuleItem 
+              cap="Capítulo 2" 
+              title="Planejamento é a nova Coragem" 
+              desc="A técnica do paraquedas: Como montar sua reserva de emergência e testar sua fonte de renda ANTES de sair." 
+            />
+            <ModuleItem 
+              cap="Capítulo 3" 
+              title="Renda Online: Ilusão?" 
+              desc="Venda, psicologia humana e persistência. O mercado digital democratizou as chances, mas a concorrência é brutal." 
+            />
+            <ModuleItem 
+              cap="Capítulo 4" 
+              title="O que ninguém te conta" 
+              desc="Lidando com a falta de apoio da família, a frieza dos algoritmos e os dias ruins onde você vai querer voltar pro CLT." 
+            />
+            <ModuleItem 
+              cap="Capítulo 5" 
+              title="Primeiros Passos" 
+              desc="Como escolher UM caminho, criar uma oferta clara e divulgar seu trabalho todos os dias até fechar os primeiros clientes." 
+            />
+            <ModuleItem 
+              cap="Conclusão" 
+              title="Direção, não Fuga" 
+              desc="Os próximos passos práticos para os próximos 5 anos da sua vida profissional. Risco calculado não é loucura." 
+            />
           </div>
         </div>
       </section>
 
-      <section className="py-24 bg-slate-900/30">
+      {/* THE BONUS SECTION - RECURRENCE */}
+      <section className="py-32 bg-slate-950 relative overflow-hidden border-t border-white/5">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-emerald-500/5 blur-[120px] -z-10"></div>
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-slate-950 p-8 md:p-16 rounded-[3rem] border border-slate-800 shadow-2xl">
-            <h2 className="text-2xl md:text-4xl font-black mb-12 tracking-tight text-center md:text-left uppercase italic">O que você vai dominar:</h2>
-            <div className="space-y-2">
-              <ModuleRow number="01" title="Mindset de Dono vs Mindset de Empregado" tags={["REPROGRAMAÇÃO"]} />
-              <ModuleRow number="02" title="Planilha Mestre de Reserva Financeira" tags={["CÁLCULO EXATO"]} />
-              <ModuleRow number="03" title="O Plano de 90 Dias para a Demissão" tags={["EXECUÇÃO"]} />
-              <ModuleRow number="04" title="Modelos de Mensagem para seu Chefe" tags={["COPYWRITING"]} />
-              <ModuleRow number="05" title="Como não falir no 1º mês de liberdade" tags={["GESTÃO"]} />
+          <div className="max-w-5xl mx-auto bg-gradient-to-br from-slate-900 to-slate-950 p-8 md:p-20 rounded-[3rem] border border-emerald-500/30 shadow-2xl relative">
+            <div className="relative z-10">
+              <span className="bg-emerald-500 text-slate-950 text-[10px] font-black px-4 py-1 rounded-full mb-6 inline-block uppercase tracking-widest">Bônus Exclusivo de Lançamento</span>
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-8 tracking-tighter leading-none">
+                CONSTRUINDO SUA <br />
+                <span className="text-emerald-500 italic underline decoration-wavy decoration-emerald-500/40">RECORRÊNCIA.</span>
+              </h2>
+              <p className="text-slate-400 text-lg mb-10 max-w-2xl leading-relaxed">
+                Liberdade sem previsibilidade financeira é apenas desespero adiado. Neste método bônus, eu te ensino a estruturar sua empresa para faturar todos os meses com contratos recorrentes.
+                <span className="block mt-4 text-emerald-400 font-bold">Aprenda a criar estabilidade real fora da carteira assinada.</span>
+              </p>
+              
+              <div className="flex flex-wrap gap-6 text-sm font-black uppercase tracking-widest text-emerald-500/80">
+                <span>• Modelos de Assinatura</span>
+                <span>• Gestão de Cashflow</span>
+                <span>• Escala Sustentável</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Final Offer */}
-      <section className="py-24 bg-slate-950">
+      <section id="checkout" className="py-32 bg-slate-950">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <div className="bg-red-600/10 border border-red-600/20 text-red-600 inline-block px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 animate-pulse">
-              Acesso por tempo limitado
+          <div className="max-w-4xl mx-auto bg-slate-900 rounded-[3rem] border-2 border-amber-500/50 overflow-hidden shadow-[0_0_100px_rgba(245,158,11,0.1)]">
+            <div className="p-8 md:p-16 flex flex-col md:flex-row items-center gap-12">
+              <div className="w-48 flex-shrink-0">
+                <img src={EBOOK_MOCKUP} alt="Ebook" className="w-full drop-shadow-2xl -rotate-2" />
+              </div>
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-3xl font-black text-white mb-4 tracking-tight uppercase leading-none">Comece sua nova jornada hoje</h3>
+                <p className="text-slate-400 mb-8 leading-relaxed">Você não precisa de um milagre. Você precisa de um plano. Leve o Guia MasterCLT + Bônus de Recorrência.</p>
+                
+                <div className="flex items-baseline justify-center md:justify-start gap-4 mb-10">
+                  <span className="text-slate-600 line-through text-xl">R$ 97,00</span>
+                  <span className="text-amber-500 text-6xl font-black tracking-tighter">R$ 9,90</span>
+                </div>
+
+                <a href={KIWIFY_LINK} className="block w-full bg-amber-500 hover:bg-amber-600 text-slate-950 text-center py-6 rounded-2xl font-black text-2xl shadow-xl transition-all active:scale-95 animate-pulse-gold uppercase tracking-tighter">
+                  Acessar Guia Agora
+                </a>
+                
+                <div className="mt-8 flex items-center justify-center md:justify-start gap-4 opacity-30 grayscale">
+                   <img src="https://logodownload.org/wp-content/uploads/2014/07/visa-logo-1.png" className="h-3" alt="Visa" />
+                   <img src="https://logodownload.org/wp-content/uploads/2020/02/pix-logo-1.png" className="h-3" alt="Pix" />
+                   <img src="https://logodownload.org/wp-content/uploads/2014/07/mastercard-logo.png" className="h-4" alt="Master" />
+                </div>
+              </div>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase leading-none">
-              É O PREÇO DE UM <span className="text-amber-500 italic">CAFEZINHO.</span>
-            </h2>
-            <p className="text-slate-400 text-lg max-w-xl mx-auto leading-relaxed">
-              O risco é todo nosso. Se em 7 dias você não sentir que esse plano vale 10x o valor pago, devolvemos seu dinheiro na hora.
-            </p>
           </div>
-          <PurchaseBox />
         </div>
       </section>
 
-      <footer className="py-12 border-t border-slate-900 text-center opacity-30">
-        <div className="font-black text-xl tracking-tighter italic mb-4">MASTER<span className="text-amber-500">CLT</span></div>
-        <p className="text-[9px] uppercase font-bold tracking-[0.4em] mb-2">© 2024 MASTERCLT - Todos os direitos reservados</p>
-        <p className="text-[8px] max-w-xs mx-auto text-slate-600">
-          Resultados variam conforme o esforço. Este material é educativo e não substitui aconselhamento jurídico ou financeiro personalizado.
-        </p>
+      {/* Footer */}
+      <footer className="py-16 border-t border-white/5 bg-slate-900/10">
+        <div className="container mx-auto px-4 text-center">
+          <div className="text-xl font-black italic tracking-tighter mb-8 opacity-20">MASTER<span className="text-amber-500">CLT</span></div>
+          <p className="text-[10px] text-slate-700 uppercase font-bold tracking-[0.4em] mb-4">© 2024 MASTERCLT - Todos os direitos reservados</p>
+          <div className="max-w-2xl mx-auto opacity-20">
+            <p className="text-[8px] text-slate-800 uppercase font-bold tracking-widest leading-relaxed">
+              ESTE PRODUTO É DESTINADO A PROFISSIONAIS. RISCO CALCULADO NÃO É LOUCURA, É INTELIGÊNCIA APLICADA À CORAGEM. OS RESULTADOS DEPENDEM EXCLUSIVAMENTE DA SUA EXECUÇÃO.
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
