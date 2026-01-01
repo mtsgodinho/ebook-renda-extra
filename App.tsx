@@ -27,7 +27,7 @@ const useCountdown = (initialMin: number, initialSec: number) => {
 
 const TopUrgencyBar: React.FC<{ time: { min: number; sec: number } }> = ({ time }) => {
   return (
-    <div className="bg-amber-500 text-slate-950 py-2.5 px-4 text-center overflow-hidden relative">
+    <div className="bg-amber-500 text-slate-950 py-2.5 px-4 text-center overflow-hidden relative z-[110]">
       <div className="container mx-auto flex items-center justify-center gap-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
         <span className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-slate-950 animate-pulse"></span>
@@ -36,6 +36,29 @@ const TopUrgencyBar: React.FC<{ time: { min: number; sec: number } }> = ({ time 
         <span className="bg-slate-950 text-white px-3 py-0.5 rounded-full font-mono font-bold tracking-normal">
           {time.min.toString().padStart(2, '0')}:{time.sec.toString().padStart(2, '0')}
         </span>
+      </div>
+    </div>
+  );
+};
+
+const FloatingClock: React.FC<{ time: { min: number; sec: number } }> = ({ time }) => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setVisible(window.scrollY > 300);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className={`fixed top-24 right-6 z-[105] transition-all duration-500 transform ${visible ? 'translate-x-0 opacity-100' : 'translate-x-20 opacity-0'}`}>
+      <div className="bg-slate-900/80 backdrop-blur-xl border border-amber-500/30 p-4 rounded-3xl shadow-[0_0_30px_rgba(245,158,11,0.2)] flex flex-col items-center">
+        <div className="text-[8px] font-black text-amber-500 uppercase tracking-widest mb-1 text-center leading-none">
+          Preço Sobe <br /> em breve
+        </div>
+        <div className="font-mono text-xl font-black text-white tabular-nums tracking-tighter">
+          {time.min.toString().padStart(2, '0')}:{time.sec.toString().padStart(2, '0')}
+        </div>
       </div>
     </div>
   );
@@ -112,6 +135,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-amber-500/30 overflow-x-hidden">
       <TopUrgencyBar time={time} />
+      <FloatingClock time={time} />
       <StickyCTA />
 
       {/* Hero Section */}
