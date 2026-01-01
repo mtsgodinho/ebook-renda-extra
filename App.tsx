@@ -5,11 +5,10 @@ import React, { useState, useEffect } from 'react';
 const KIWIFY_LINK = "https://pay.kiwify.com.br/raCQcNq";
 const EBOOK_MOCKUP = "https://i.imgur.com/wMi53pM.png";
 
-// --- Sub-components ---
+// --- Custom Hook para Sincronização do Tempo ---
+const useCountdown = (initialMin: number, initialSec: number) => {
+  const [timeLeft, setTimeLeft] = useState({ min: initialMin, sec: initialSec });
 
-const TopUrgencyBar: React.FC = () => {
-  const [timeLeft, setTimeLeft] = useState({ min: 14, sec: 21 });
-  
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft(prev => {
@@ -21,6 +20,12 @@ const TopUrgencyBar: React.FC = () => {
     return () => clearInterval(timer);
   }, []);
 
+  return timeLeft;
+};
+
+// --- Sub-components ---
+
+const TopUrgencyBar: React.FC<{ time: { min: number; sec: number } }> = ({ time }) => {
   return (
     <div className="bg-amber-500 text-slate-950 py-2.5 px-4 text-center overflow-hidden relative">
       <div className="container mx-auto flex items-center justify-center gap-4 text-[10px] md:text-xs font-black uppercase tracking-[0.2em]">
@@ -29,8 +34,30 @@ const TopUrgencyBar: React.FC = () => {
           OFERTA DE LANÇAMENTO EXPIRA EM:
         </span>
         <span className="bg-slate-950 text-white px-3 py-0.5 rounded-full font-mono font-bold tracking-normal">
-          {timeLeft.min.toString().padStart(2, '0')}:{timeLeft.sec.toString().padStart(2, '0')}
+          {time.min.toString().padStart(2, '0')}:{time.sec.toString().padStart(2, '0')}
         </span>
+      </div>
+    </div>
+  );
+};
+
+const UrgencyBanner: React.FC<{ time: { min: number; sec: number }; title?: string }> = ({ time, title = "OFERTA POR TEMPO LIMITADO" }) => {
+  return (
+    <div className="bg-amber-500 text-slate-950 py-6 px-4 text-center border-y-4 border-slate-950 shadow-[0_0_50px_rgba(245,158,11,0.3)]">
+      <div className="container mx-auto flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+        <span className="text-xs md:text-sm font-black uppercase tracking-[0.3em] flex items-center gap-3">
+          <span className="w-3 h-3 rounded-full bg-slate-950 animate-ping"></span>
+          {title}
+        </span>
+        <div className="flex items-center gap-4">
+          <span className="bg-slate-950 text-white px-5 py-2 rounded-xl font-mono text-2xl md:text-3xl font-bold tracking-tight shadow-xl">
+            {time.min.toString().padStart(2, '0')}:{time.sec.toString().padStart(2, '0')}
+          </span>
+          <div className="text-left leading-none">
+            <p className="text-[10px] font-black uppercase opacity-60">Segundos para</p>
+            <p className="text-sm font-black uppercase">O Próximo Lote</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -80,14 +107,15 @@ const Statistic: React.FC<{ val: string; label: string; sub: string }> = ({ val,
 );
 
 export default function App() {
+  const time = useCountdown(14, 21);
+
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-amber-500/30 overflow-x-hidden">
-      <TopUrgencyBar />
+      <TopUrgencyBar time={time} />
       <StickyCTA />
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-20 md:pt-40 md:pb-32">
-        {/* Abstract Background Elements */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[120%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/5 via-transparent to-transparent -z-10"></div>
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/10 blur-[150px] rounded-full -z-10"></div>
         
@@ -169,6 +197,9 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* --- MIDDLE URGENCY ALERT --- */}
+      <UrgencyBanner time={time} title="VOCÊ ESTÁ A UM PASSO DA ALFORRIA" />
 
       {/* Chapters Breakdown (Page 3-7) */}
       <section className="py-32 bg-white/[0.01]">
@@ -273,6 +304,9 @@ export default function App() {
            <div className="w-32 h-1.5 bg-amber-500 mx-auto rounded-full"></div>
         </div>
       </section>
+
+      {/* --- END URGENCY ALERT --- */}
+      <UrgencyBanner time={time} title="ÚLTIMA OPORTUNIDADE DO VALOR ATUAL" />
 
       {/* Footer */}
       <footer className="py-24 border-t border-white/5 bg-[#020617]">
